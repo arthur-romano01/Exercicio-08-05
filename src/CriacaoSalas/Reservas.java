@@ -20,9 +20,17 @@ class Reserva {
 }
 
 class GerenciadorDeReservas {
+    private static GerenciadorDeReservas instance;
     private List<Reserva> reservas = new ArrayList<>();
     private List<Sala> salas = new ArrayList<>();
-    private GerenciamentoUsuarios.PoliticaReserva politicaReserva; // Padrão Strategy: O Contexto possui uma Estratégia
+    private GerenciamentoUsuarios.PoliticaReserva politicaReserva; 
+
+    private GerenciadorDeReservas() {};
+    public static synchronized GerenciadorDeReservas getInstance() {
+        if (instance == null)
+            instance = new GerenciadorDeReservas();
+        return instance;
+    }
 
     public void setPoliticaReserva(GerenciamentoUsuarios.PoliticaReserva politica) {
         this.politicaReserva = politica;
@@ -113,7 +121,7 @@ class GerenciadorDeReservas {
 
 public class Reservas {
     public static void main(String[] args){
-        GerenciadorDeReservas gerenciador = new GerenciadorDeReservas();
+        GerenciadorDeReservas gerenciador = GerenciadorDeReservas.getInstance();
         
         // Configurando a Política de Reserva (Strategy) no Gerenciador (Context)
         gerenciador.setPoliticaReserva(new GerenciamentoUsuarios.PoliticaPrioridade());

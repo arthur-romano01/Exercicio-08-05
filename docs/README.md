@@ -3,12 +3,17 @@
 Esse projeto consiste em um sistema de reserva de salas que deve permitir que estudantes e professores consultem a disponibilidade de salas, façam reservas e recebam notificações sobre alterações ou conflitos.
 
 ## Requisitos
-- RF-01 Listar salas disponíveis em um intervalo de datas.
-- RF 02 Permitir que um usuário crie, modifique ou cancele uma reserva.
-- RF-03 Detectar e impedir colisões de horário.
-- RF-04 Enviar notificação imediata a todos os envolvidos quando uma reserva for alterada ou
-cancelada.
-- RF-05 Disponibilizar relatório diário com as reservas confirmadas de cada sala.
+- [x] RF-01 Listar salas disponíveis em um intervalo de datas.
+- [x] RF-02 Permitir que um usuário crie, modifique ou cancele uma reserva.
+- [x] RF-03 Detectar e impedir colisões de horário.
+- [x] RF-04 Enviar notificação imediata a todos os envolvidos quando uma reserva for alterada ou cancelada.
+- [ ] RF-05 Disponibilizar relatório diário com as reservas confirmadas de cada sala.
+
+## Padrões de Projeto Aplicados
+- **Factory Method**: Criação de diferentes tipos de salas.
+- **Observer**: Sistema de notificações para alertar usuários sobre alterações ou cancelamentos em suas reservas.
+- **Strategy**: Definição de políticas de prioridade para reservas (ex: professores sobre alunos).
+- **Singleton**: Gerenciamento centralizado do sistema (ex: `GerenciadorDeReservas`), garantindo uma instância única para o controle de salas e reservas.
 
 ## Instruções de Uso
 
