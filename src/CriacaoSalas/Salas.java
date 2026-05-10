@@ -1,7 +1,4 @@
-interface Sala {
-    void exibirDetalhes();
-    String getNome();
-}
+package CriacaoSalas;
 
 class SalaEstudoIndividual implements Sala{
     private String nome;
