@@ -7,8 +7,11 @@ import GerenciamentoUsuarios.Usuario;
 import Notificações.*;
 import GeraçãoRelatorios.Relatorio;
 
+interface ReservaBase {
+   void exibirDetalhes();
+}
 
-class Reserva {
+class Reserva implements ReservaBase {
     Sala sala;
     LocalDateTime dataInicio;
     LocalDateTime dataFim;
@@ -18,6 +21,14 @@ class Reserva {
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
         this.dono = dono;
+    }
+
+    @Override
+    public void exibirDetalhes() {
+        System.out.println("Reserva | Sala: " + sala.getNome()
+            + " | Usuário: " + dono.getNome()
+            + " | Das " + dataInicio.toLocalTime()
+            + " às " + dataFim.toLocalTime());
     }
 }
 
@@ -179,7 +190,44 @@ class GerenciadorDeReservas {
     }
 }
 
+abstract class ReservaDecorator implements ReservaBase {
+    protected ReservaBase reserva;
 
+    public ReservaDecorator(ReservaBase reserva) {
+        this.reserva = reserva;
+    }
+
+    @Override
+    public void exibirDetalhes() {
+        reserva.exibirDetalhes();
+    }
+}
+
+
+class ReservaComMultimidia extends ReservaDecorator {
+    public ReservaComMultimidia(ReservaBase reserva) {
+        super(reserva);
+    }
+
+    @Override
+    public void exibirDetalhes() {
+        super.exibirDetalhes();                              
+        System.out.println("  [+] Equipamento Multimídia incluído");
+    }
+}
+
+
+class ReservaComLimpeza extends ReservaDecorator {
+    public ReservaComLimpeza(ReservaBase reserva) {
+        super(reserva);
+    }
+
+    @Override
+    public void exibirDetalhes() {
+        super.exibirDetalhes();                              
+        System.out.println("  [+] Serviço de Limpeza incluído");
+    }
+}
 
 
 public class Reservas {
@@ -255,5 +303,23 @@ public class Reservas {
         // ── RF-05: Relatório diário ──
         System.out.println("\n=== RF-05: Encerrando o dia — Gerando Relatório ===");
         gerenciador.gerarRelatorioDiario();
+
+        // ── BÔNUS: Decorator — adicionando extras a uma reserva ──
+        System.out.println("\n=== BÔNUS — Decorator: Reservas com Funcionalidades Extras ===");
+
+        // Reserva simples (componente base)
+        ReservaBase r1 = new Reserva(sala3, inicio, fim, professor);
+        System.out.println("\n-- Reserva simples --");
+        r1.exibirDetalhes();
+
+        // Reserva com equipamento multimídia
+        ReservaBase r2 = new ReservaComMultimidia(new Reserva(sala3, inicio, fim, professor));
+        System.out.println("\n-- Reserva + Multimídia --");
+        r2.exibirDetalhes();
+
+        // Reserva com multimídia E limpeza (decorators empilhados)
+        ReservaBase r3 = new ReservaComLimpeza(new ReservaComMultimidia(new Reserva(sala3, inicio, fim, professor)));
+        System.out.println("\n-- Reserva + Multimídia + Limpeza (empilhados) --");
+        r3.exibirDetalhes();
     }
 }
