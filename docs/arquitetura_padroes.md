@@ -2,11 +2,11 @@
 
 Este documento detalha as decisões arquiteturais e os padrões de projeto (Design Patterns) implementados no Sistema de Reserva de Salas de Estudo, visando atender aos requisitos funcionais (RF-01 a RF-04).
 
-## 1. Singleton (Gerenciamento Centralizado)
-**Onde:** `GerenciadorDeReservas`
-**Objetivo:** Garantir que exista apenas uma instância central do gerenciador de reservas em memória durante a execução.
+## 1. Singleton (Gerenciamento Centralizado e Logs)
+**Onde:** `GerenciadorDeReservas` (Pacote `CriacaoSalas`) e `Relatorio` (Pacote `GeraçãoRelatorios`).
+**Objetivo:** Garantir que exista apenas uma instância central do gerenciador de reservas em memória e uma única instância de acesso de gravação de logs (evitando concorrência em I/O).
 **Detalhes:**
-- O construtor é privado.
+- O construtor é privado em ambas as classes.
 - A instância é mantida na variável estática `instance`.
 - A criação é garantida de forma "Thread-Safe" através do modificador `synchronized` no método `getInstance()`.
 

@@ -18,6 +18,7 @@ classDiagram
         + alterarReserva(salaAtual, inicioAtual, ...)
         + cancelarReserva(sala, inicio, fim)
         + buscarConflito(sala, inicio, fim) Reserva
+        + gerarRelatorioDiario()
     }
 
     class Reserva {
@@ -25,6 +26,14 @@ classDiagram
         + dataInicio: LocalDateTime
         + dataFim: LocalDateTime
         + dono: Usuario
+    }
+
+    class Relatorio {
+        - static instance: Relatorio
+        - contador: int
+        - Relatorio()
+        + static getInstance() Relatorio
+        + gerarRelatorio(titulo: String, conteudo: String)
     }
 
     %% Strategy Pattern
@@ -89,6 +98,7 @@ classDiagram
     GerenciadorDeReservas "1" *-- "many" Sala
     GerenciadorDeReservas "1" o-- "1" PoliticaReserva
     GerenciadorDeReservas "1" o-- "many" Observer
+    GerenciadorDeReservas ..> Relatorio : usa
 ```
 
 ## Relacionamento dos Componentes
