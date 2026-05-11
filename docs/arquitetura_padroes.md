@@ -31,3 +31,13 @@ Este documento detalha as decisões arquiteturais e os padrões de projeto (Desi
 - **PULL:** O Subject envia a própria referência e o Observer "puxa" os dados que precisa.
 - **PUSH:** O Subject já empurra as mensagens consolidadas diretamente no evento `update`.
 - O `GerenciadorDeReservas` atua como o client que dispara esses eventos sempre que a lista de reservas sofre mutações.
+
+## 5. Decorator — Extensão Opcional (Bônus)
+**Onde:** Pacote `CriacaoSalas` (Interface `ReservaBase`, classe abstrata `ReservaDecorator`, classes concretas `ReservaComMultimidia` e `ReservaComLimpeza`).
+**Objetivo:** Adicionar funcionalidades extras a uma reserva (equipamento multimídia, serviço de limpeza) de forma dinâmica e transparente, sem modificar a classe `Reserva` original nem o `GerenciadorDeReservas`.
+**Detalhes:**
+- A interface `ReservaBase` define o contrato (`exibirDetalhes()`), implementado tanto por `Reserva` (componente base) quanto por `ReservaDecorator` (decorator abstrato).
+- `ReservaDecorator` guarda uma referência interna ao objeto decorado e delega `exibirDetalhes()` a ele.
+- Os decorators concretos (`ReservaComMultimidia`, `ReservaComLimpeza`) estendem `ReservaDecorator`, chamam `super.exibirDetalhes()` e acrescentam sua própria saída.
+- Os decorators podem ser **empilhados** livremente: `new ReservaComLimpeza(new ReservaComMultimidia(new Reserva(...)))`.
+- O `GerenciadorDeReservas` **não é afetado** — os decorators são usados exclusivamente na camada de apresentação/exibição.

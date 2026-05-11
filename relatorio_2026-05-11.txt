@@ -1,0 +1,6 @@
+Título: Relatório Diário de Ocupação
+Data: 2026-05-11
+Conteúdo: Reservas confirmadas hoje:
+
+- Sala: Laboratório 301 | Das 14:11:39.804474900 às 16:11:39.804474900 | Usuário: Dr. Silva (Professor)
+
