@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import GerenciamentoUsuarios.Usuario;
 import Notificações.*;
+import GeraçãoRelatorios.Relatorio;
 
 
 class Reserva {
@@ -147,6 +148,26 @@ class GerenciadorDeReservas {
         }
     }
 
+    public void gerarRelatorioDiario() {
+        StringBuilder conteudo = new StringBuilder();
+        conteudo.append("Reservas confirmadas hoje:\n\n");
+        
+        if (reservas.isEmpty()) {
+            conteudo.append("Nenhuma reserva registrada.\n");
+        } else {
+            for (Reserva r : reservas) {
+                conteudo.append("- Sala: ").append(r.sala.getNome())
+                        .append(" | Das ").append(r.dataInicio.toLocalTime())
+                        .append(" às ").append(r.dataFim.toLocalTime())
+                        .append(" | Usuário: ").append(r.dono.getNome())
+                        .append("\n");
+            }
+        }
+        
+        // Chamando o Singleton de Relatorio para gravar os dados
+        Relatorio.getInstance().gerarRelatorio("Relatório Diário de Ocupação", conteudo.toString());
+    }
+
     public List<Sala> listarSalasDisponiveis(LocalDateTime inicio, LocalDateTime fim) {
         List<Sala> disponiveis = new ArrayList<>();
         for (Sala sala : salas) {
@@ -197,5 +218,8 @@ public class Reservas {
 
         System.out.println("\n--- 4. Aluno 2 tentando reservar Sala 1 do Professor ---");
         gerenciador.criarReserva(sala1, inicio, fim, aluno2);
+        
+        System.out.println("\n--- 5. Encerrando o dia: Gerando Relatório ---");
+        gerenciador.gerarRelatorioDiario();
     }
 }

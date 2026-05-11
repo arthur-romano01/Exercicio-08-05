@@ -7,13 +7,13 @@ Esse projeto consiste em um sistema de reserva de salas que deve permitir que es
 - [x] RF-02 Permitir que um usuário crie, modifique ou cancele uma reserva.
 - [x] RF-03 Detectar e impedir colisões de horário.
 - [x] RF-04 Enviar notificação imediata a todos os envolvidos quando uma reserva for alterada ou cancelada.
-- [ ] RF-05 Disponibilizar relatório diário com as reservas confirmadas de cada sala.
+- [x] RF-05 Disponibilizar relatório diário com as reservas confirmadas de cada sala.
 
 ## Padrões de Projeto Aplicados
 - **Factory Method**: Criação de diferentes tipos de salas.
 - **Observer**: Sistema de notificações para alertar usuários sobre alterações ou cancelamentos em suas reservas.
 - **Strategy**: Definição de políticas de prioridade para reservas (ex: professores sobre alunos).
-- **Singleton**: Gerenciamento centralizado do sistema (ex: `GerenciadorDeReservas`), garantindo uma instância única para o controle de salas e reservas.
+- **Singleton**: Gerenciamento centralizado do sistema (`GerenciadorDeReservas`) e do módulo de relatórios (`Relatorio`), garantindo instâncias únicas para controle e gravação em arquivo.
 
 ## Instruções de Uso
 
@@ -31,11 +31,11 @@ Esta é a forma recomendada e oficial para a avaliação do projeto.
    ```
 3. Compile os arquivos Java:
    ```bash
-   javac -d bin src/*.java
+   javac -d bin src/CriacaoSalas/*.java src/GerenciamentoUsuarios/*.java src/Notificações/*.java src/GeraçãoRelatorios/*.java
    ```
 4. Execute a aplicação:
    ```bash
-   java -cp bin Main
+   java -cp bin CriacaoSalas.Reservas
    ```
 
 ## Equipe
