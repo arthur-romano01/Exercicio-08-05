@@ -185,41 +185,75 @@ class GerenciadorDeReservas {
 public class Reservas {
     public static void main(String[] args){
         GerenciadorDeReservas gerenciador = GerenciadorDeReservas.getInstance();
-        
-        // Configurando a Política de Reserva (Strategy)
-        gerenciador.setPoliticaReserva(new GerenciamentoUsuarios.PoliticaPrioridade());
-        
+
         // Registrando o Notificador (Observer)
         gerenciador.registrarObserver(new Notificador());
-        
-        // Criando salas hipotéticas
-        Sala sala1 = new SalaEstudoIndividual("Sala de Estudo 1");
-        Sala sala2 = new SalaTrabalhoEmGrupo("Sala de Grupo 1");
-        
+
+        // Criando salas via FabricaDeSalas (Factory Method) — RF-01
+        Sala sala1 = FabricaDeSalas.createSala("estudo individual", "Sala de Estudo 101");
+        Sala sala2 = FabricaDeSalas.createSala("trabalho em grupo", "Sala de Grupo 201");
+        Sala sala3 = FabricaDeSalas.createSala("laboratorio", "Laboratório 301");
+
         gerenciador.adicionarSala(sala1);
         gerenciador.adicionarSala(sala2);
-        
-        // Criando usuários para o teste de política
-        Usuario aluno1 = new Usuario("João (Aluno)", "joao@email.com", "123", "aluno");
-        Usuario aluno2 = new Usuario("Maria (Aluno)", "maria@email.com", "123", "aluno");
-        Usuario professor = new Usuario("Dr. Silva (Professor)", "silva@email.com", "123", "professor");
+        gerenciador.adicionarSala(sala3);
+
+        // Criando usuários
+        Usuario aluno1    = new Usuario("João (Aluno)",          "joao@email.com",  "123", "aluno");
+        Usuario aluno2    = new Usuario("Maria (Aluno)",          "maria@email.com", "123", "aluno");
+        Usuario professor = new Usuario("Dr. Silva (Professor)",  "silva@email.com", "123", "professor");
 
         LocalDateTime inicio = LocalDateTime.now();
-        LocalDateTime fim = inicio.plusHours(2);
-        
-        System.out.println("--- 1. Aluno 1 reservando Sala 1 ---");
+        LocalDateTime fim    = inicio.plusHours(2);
+
+        // ── RF-01: Listar salas disponíveis antes de qualquer reserva ──
+        System.out.println("=== RF-01: Salas disponíveis no horário " + inicio.toLocalTime() + " - " + fim.toLocalTime() + " ===");
+        for (Sala s : gerenciador.listarSalasDisponiveis(inicio, fim)) {
+            System.out.println("  Disponível: " + s.getNome());
+        }
+
+        // ── ESTRATÉGIA 1: PoliticaPrimeiroChegado ──
+        System.out.println("\n=== ESTRATÉGIA: Primeiro a Reservar tem Prioridade ===");
+        gerenciador.setPoliticaReserva(new GerenciamentoUsuarios.PoliticaPrimeiroChegado());
+
+        System.out.println("\n--- 1. Aluno 1 reservando Sala de Estudo 101 ---");
         gerenciador.criarReserva(sala1, inicio, fim, aluno1);
-        
-        System.out.println("\n--- 2. Aluno 2 tentando roubar a Sala 1 do Aluno 1 ---");
+
+        System.out.println("\n--- 2. Aluno 2 tenta tomar a Sala 101 do Aluno 1 (deve ser negado) ---");
         gerenciador.criarReserva(sala1, inicio, fim, aluno2);
-        
-        System.out.println("\n--- 3. Professor tentando roubar a Sala 1 do Aluno 1 ---");
+
+        System.out.println("\n--- 3. Professor tenta tomar a Sala 101 do Aluno 1 (deve ser negado) ---");
         gerenciador.criarReserva(sala1, inicio, fim, professor);
 
-        System.out.println("\n--- 4. Aluno 2 tentando reservar Sala 1 do Professor ---");
-        gerenciador.criarReserva(sala1, inicio, fim, aluno2);
-        
-        System.out.println("\n--- 5. Encerrando o dia: Gerando Relatório ---");
+        // ── ESTRATÉGIA 2: PoliticaPrioridade ──
+        System.out.println("\n=== ESTRATÉGIA: Prioridade por Papel (Professor > Aluno) ===");
+        gerenciador.setPoliticaReserva(new GerenciamentoUsuarios.PoliticaPrioridade());
+
+        System.out.println("\n--- 4. Aluno 2 reservando Sala de Grupo 201 ---");
+        gerenciador.criarReserva(sala2, inicio, fim, aluno2);
+
+        System.out.println("\n--- 5. Professor tenta tomar a Sala 201 do Aluno 2 (deve ter prioridade) ---");
+        gerenciador.criarReserva(sala2, inicio, fim, professor);
+
+        System.out.println("\n--- 6. Aluno 1 tenta tomar a Sala 201 do Professor (deve ser negado) ---");
+        gerenciador.criarReserva(sala2, inicio, fim, aluno1);
+
+        // ── RF-02: Alteração de reserva ──
+        System.out.println("\n--- 7. Professor altera reserva da Sala 201 para o Laboratório 301 ---");
+        gerenciador.alterarReserva(sala2, inicio, fim, sala3, inicio, fim, professor);
+
+        // ── RF-02: Cancelamento ──
+        System.out.println("\n--- 8. Aluno 1 cancela a reserva da Sala de Estudo 101 ---");
+        gerenciador.cancelarReserva(sala1, inicio, fim);
+
+        // ── RF-01: Listar salas disponíveis após operações ──
+        System.out.println("\n=== RF-01: Salas disponíveis após todas as operações ===");
+        for (Sala s : gerenciador.listarSalasDisponiveis(inicio, fim)) {
+            System.out.println("  Disponível: " + s.getNome());
+        }
+
+        // ── RF-05: Relatório diário ──
+        System.out.println("\n=== RF-05: Encerrando o dia — Gerando Relatório ===");
         gerenciador.gerarRelatorioDiario();
     }
 }

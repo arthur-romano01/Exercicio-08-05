@@ -10,15 +10,15 @@ Esse projeto consiste em um sistema de reserva de salas que deve permitir que es
 - [x] RF-05 Disponibilizar relatório diário com as reservas confirmadas de cada sala.
 
 ## Padrões de Projeto Aplicados
-- **Factory Method**: Criação de diferentes tipos de salas.
-- **Observer**: Sistema de notificações para alertar usuários sobre alterações ou cancelamentos em suas reservas.
-- **Strategy**: Definição de políticas de prioridade para reservas (ex: professores sobre alunos).
+- **Factory Method**: Criação de diferentes tipos de salas (`SalaEstudoIndividual`, `SalaTrabalhoEmGrupo`, `SalaLaboratorio`) através da `FabricaDeSalas`, sem acoplamento às classes concretas.
+- **Observer**: Sistema de notificações com modelos **Push** e **Pull** para alertar usuários sobre criações, alterações ou cancelamentos em suas reservas.
+- **Strategy**: Duas políticas de reserva intercambiáveis em tempo de execução: `PoliticaPrimeiroChegado` (quem chegou primeiro mantém a sala) e `PoliticaPrioridade` (professores têm prioridade sobre alunos).
 - **Singleton**: Gerenciamento centralizado do sistema (`GerenciadorDeReservas`) e do módulo de relatórios (`Relatorio`), garantindo instâncias únicas para controle e gravação em arquivo.
 
 ## Instruções de Uso
 
 ### Pré-requisitos
-- **Java Development Kit (JDK) 26** ou superior.
+- **Java Development Kit (JDK) 17** ou superior.
 - Um terminal (Prompt de Comando, PowerShell, ou terminal do Linux/Mac).
 
 ### Como compilar e executar (Via Terminal)

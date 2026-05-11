@@ -44,7 +44,11 @@ classDiagram
     class PoliticaPrioridade {
         + verificarPermissao(solicitante: Usuario, donoAtual: Usuario) boolean
     }
+    class PoliticaPrimeiroChegado {
+        + verificarPermissao(solicitante: Usuario, donoAtual: Usuario) boolean
+    }
     PoliticaReserva <|.. PoliticaPrioridade
+    PoliticaReserva <|.. PoliticaPrimeiroChegado
 
     %% Factory Pattern
     class Sala {
@@ -61,9 +65,13 @@ classDiagram
     class SalaLaboratorio {
         - nome: String
     }
+    class FabricaDeSalas {
+        + static createSala(tipo: String, nome: String) Sala
+    }
     Sala <|.. SalaEstudoIndividual
     Sala <|.. SalaTrabalhoEmGrupo
     Sala <|.. SalaLaboratorio
+    FabricaDeSalas ..> Sala : cria
 
     %% Observer Pattern
     class Observer {
@@ -104,3 +112,6 @@ classDiagram
 ## Relacionamento dos Componentes
 - O **GerenciadorDeReservas** centraliza as ações e possui referências injetadas de **PoliticaReserva** (Strategy) e **Observer** (Notificações).
 - Toda criação/alteração/cancelamento de uma **Reserva** instanciará objetos que herdam de **Subject** e disparará avisos para as classes do pacote de Notificações.
+- A **FabricaDeSalas** centraliza a criação dos três tipos de sala (`SalaEstudoIndividual`, `SalaTrabalhoEmGrupo`, `SalaLaboratorio`), desacoplando o cliente das classes concretas.
+- O padrão **Strategy** possui duas implementações intercambiáveis em tempo de execução: `PoliticaPrimeiroChegado` (FCFS) e `PoliticaPrioridade` (docente > aluno).
+- O **Relatorio** (Singleton) é acionado pelo `GerenciadorDeReservas` ao final do dia para persistir as reservas confirmadas em arquivo.
