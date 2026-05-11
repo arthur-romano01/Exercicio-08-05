@@ -1,6 +1,6 @@
 # Arquitetura e Padrões de Projeto
 
-Este documento detalha as decisões arquiteturais e os padrões de projeto (Design Patterns) implementados no Sistema de Reserva de Salas de Estudo, visando atender aos requisitos funcionais (RF-01 a RF-04).
+Este documento detalha as decisões arquiteturais e os padrões de projeto (Design Patterns) implementados no Sistema de Reserva de Salas de Estudo, visando atender aos requisitos funcionais (RF-01 a RF-05).
 
 ## 1. Singleton (Gerenciamento Centralizado e Logs)
 **Onde:** `GerenciadorDeReservas` (Pacote `CriacaoSalas`) e `Relatorio` (Pacote `GeraçãoRelatorios`).
@@ -17,11 +17,12 @@ Este documento detalha as decisões arquiteturais e os padrões de projeto (Desi
 - Uma classe `FabricaDeSalas` abstrai a inicialização, retornando instâncias que respeitam o contrato da interface `Sala`.
 
 ## 3. Strategy (Políticas de Reserva e Conflito)
-**Onde:** Pacote `GerenciamentoUsuarios` (Interface `PoliticaReserva` e classe concreta `PoliticaPrioridade`).
+**Onde:** Pacote `GerenciamentoUsuarios` (Interface `PoliticaReserva`, classes concretas `PoliticaPrioridade` e `PoliticaPrimeiroChegado`).
 **Objetivo:** Definir e trocar a política de desempate de colisões dinamicamente em tempo de execução.
 **Detalhes:**
-- A política padrão definida é `PoliticaPrioridade` (Professores têm prioridade sobre alunos caso reservem no mesmo horário).
-- Injetada através do método `setPoliticaReserva()` no `GerenciadorDeReservas` (O Contexto).
+- **`PoliticaPrimeiroChegado`:** Política FCFS (First-Come, First-Served). Quem reservou primeiro mantém a sala, independentemente do tipo de usuário.
+- **`PoliticaPrioridade`:** Professores têm prioridade sobre alunos e podem sobrepor reservas em conflito.
+- A troca é feita em tempo de execução através do método `setPoliticaReserva()` no `GerenciadorDeReservas` (o Contexto do padrão Strategy), sem necessidade de recompilar ou alterar a lógica de conflito.
 
 ## 4. Observer (Sistema de Notificações - Push e Pull)
 **Onde:** Pacote `Notificações` (Interface `Observer`, classes `Subject`, `CriacaoReserva`, `AlteracaoReserva`, `CancelamentoReserva`, `Notificador`).
