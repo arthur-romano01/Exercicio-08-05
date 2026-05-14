@@ -107,6 +107,28 @@ classDiagram
     GerenciadorDeReservas "1" o-- "1" PoliticaReserva
     GerenciadorDeReservas "1" o-- "many" Observer
     GerenciadorDeReservas ..> Relatorio : usa
+
+    %% Decorator Pattern (Bônus)
+    class ReservaBase {
+        <<interface>>
+        + exibirDetalhes()
+    }
+    class ReservaDecorator {
+        <<abstract>>
+        # reserva: ReservaBase
+        + exibirDetalhes()
+    }
+    class ReservaComMultimidia {
+        + exibirDetalhes()
+    }
+    class ReservaComLimpeza {
+        + exibirDetalhes()
+    }
+    ReservaBase <|.. Reserva
+    ReservaBase <|.. ReservaDecorator
+    ReservaDecorator <|-- ReservaComMultimidia
+    ReservaDecorator <|-- ReservaComLimpeza
+    ReservaDecorator o-- ReservaBase : decora
 ```
 
 ## Relacionamento dos Componentes
@@ -115,3 +137,5 @@ classDiagram
 - A **FabricaDeSalas** centraliza a criação dos três tipos de sala (`SalaEstudoIndividual`, `SalaTrabalhoEmGrupo`, `SalaLaboratorio`), desacoplando o cliente das classes concretas.
 - O padrão **Strategy** possui duas implementações intercambiáveis em tempo de execução: `PoliticaPrimeiroChegado` (FCFS) e `PoliticaPrioridade` (docente > aluno).
 - O **Relatorio** (Singleton) é acionado pelo `GerenciadorDeReservas` ao final do dia para persistir as reservas confirmadas em arquivo.
+- O padrão **Decorator** *(bônus)* usa a interface `ReservaBase` como contrato comum entre `Reserva` e os decorators. `ReservaDecorator` delega para o objeto interno, enquanto `ReservaComMultimidia` e `ReservaComLimpeza` adicionam comportamento extra sem alterar o `GerenciadorDeReservas`.
+

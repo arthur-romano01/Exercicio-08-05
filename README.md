@@ -14,6 +14,7 @@ Esse projeto consiste em um sistema de reserva de salas que deve permitir que es
 - **Observer**: Sistema de notificações com modelos **Push** e **Pull** para alertar usuários sobre criações, alterações ou cancelamentos em suas reservas.
 - **Strategy**: Duas políticas de reserva intercambiáveis em tempo de execução: `PoliticaPrimeiroChegado` (quem chegou primeiro mantém a sala) e `PoliticaPrioridade` (professores têm prioridade sobre alunos).
 - **Singleton**: Gerenciamento centralizado do sistema (`GerenciadorDeReservas`) e do módulo de relatórios (`Relatorio`), garantindo instâncias únicas para controle e gravação em arquivo.
+- **Decorator** *(Extensão Bônus)*: Funcionalidades extras (equipamento multimídia, serviço de limpeza) adicionadas dinamicamente a uma reserva através de `ReservaComMultimidia` e `ReservaComLimpeza`, ambas estendendo `ReservaDecorator` e implementando a interface `ReservaBase`.
 
 ## Instruções de Uso
 
